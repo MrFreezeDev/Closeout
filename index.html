@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closeout — Tip tracker &amp; tax estimator for bartenders, servers &amp; baristas</title>
+<meta name="description" content="Closeout tracks your tips, sets aside your tax, and tells you what's actually yours to spend. Built for tipped workers who got tired of April surprises.">
+<meta property="og:title" content="Closeout — Settle your shift. Settle your taxes.">
+<meta property="og:description" content="The tip tracker and tax estimator built for bartenders, servers, baristas, and everyone who works shift-to-shift.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0E0B08">
+
+<!-- Schema.org for AI/Google SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Closeout",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "description": "Tip tracking and tax estimation app for tipped workers including bartenders, servers, baristas, hairstylists, and other service industry professionals.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Tipped workers, service industry, bartenders, servers, baristas, hairstylists"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0E0B08;
+    --bg-2: #15110D;
+    --surface: #1C1712;
+    --surface-2: #251E18;
+    --line: #2E2620;
+    --text: #F2EBDF;
+    --text-dim: #998A78;
+    --copper: #D9913F;
+    --copper-bright: #F0A848;
+    --green: #8EB36B;
+    --rust: #C56A3E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      radial-gradient(ellipse at top, rgba(217,145,63,0.10), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(197,106,62,0.05), transparent 50%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* === NAV === */
+  nav {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(14,11,8,0.85);
+    backdrop-filter: blur(12px);
+  }
+  nav .container { display: flex; justify-content: space-between; align-items: center; }
+  .brand {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    font-style: italic;
+  }
+  .brand::after { content: '.'; color: var(--copper); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .btn {
+    display: inline-block;
+    background: var(--copper);
+    color: var(--bg);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn:hover { background: var(--copper-bright); }
+  .btn:active { transform: translateY(1px); }
+  .btn-large { padding: 16px 32px; font-size: 14px; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { border-color: var(--copper); background: transparent; }
+
+  /* === HERO === */
+  .hero {
+    padding: 80px 0 100px;
+    text-align: left;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--copper);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--copper);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(44px, 7vw, 88px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 32px;
+    max-width: 900px;
+  }
+  .hero h1 em {
+    color: var(--copper);
+    font-style: italic;
+  }
+  .hero-sub {
+    font-size: 20px;
+    color: var(--text-dim);
+    max-width: 580px;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .hero-disclaimer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 24px;
+    letter-spacing: 0.05em;
+  }
+
+  /* === TICKER STAT BAR === */
+  .ticker {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+    margin-top: 60px;
+    background: var(--bg-2);
+  }
+  .ticker .container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .ticker-item {
+    text-align: left;
+  }
+  .ticker-number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--copper);
+    margin-bottom: 6px;
+  }
+  .ticker-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+
+  /* === SECTIONS === */
+  section { padding: 100px 0; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--copper);
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+  .section-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 56px;
+  }
+
+  /* === MATH SECTION === */
+  .math-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .math-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.35;
+    color: var(--text);
+    padding-left: 24px;
+    border-left: 2px solid var(--copper);
+  }
+  .math-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 32px;
+    border-radius: 4px;
+  }
+  .math-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+  }
+  .math-line:last-child { border-bottom: none; padding-bottom: 0;}
+  .math-line.total {
+    border-top: 1px solid var(--copper);
+    margin-top: 8px;
+    padding-top: 18px;
+    font-size: 20px;
+    border-bottom: none;
+  }
+  .math-line.total span:last-child {
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .math-line span:first-child { color: var(--text-dim); }
+
+  /* === HOW IT WORKS === */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 32px;
+  }
+  .step {
+    padding: 32px 0;
+    border-top: 2px solid var(--copper);
+  }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--copper);
+    margin-bottom: 16px;
+  }
+  .step h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .step p {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* === FEATURES === */
+  .features {
+    background: var(--bg-2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .feature {
+    background: var(--bg-2);
+    padding: 36px 28px;
+    transition: background 0.2s;
+  }
+  .feature:hover { background: var(--surface); }
+  .feature-icon {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    color: var(--copper);
+    margin-bottom: 16px;
+    font-style: italic;
+    line-height: 1;
+  }
+  .feature h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .feature p {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .feature .soon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--copper);
+    margin-top: 12px;
+    display: inline-block;
+  }
+
+  /* === TESTIMONIALS === */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .testimonial {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 28px;
+    border-radius: 4px;
+  }
+  .testimonial-quote {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .testimonial-who {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .testimonial-name { color: var(--text); }
+
+  /* === PRICING === */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    max-width: 760px;
+  }
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 36px 32px;
+  }
+  .price-card.featured {
+    border-color: var(--copper);
+    background:
+      linear-gradient(135deg, rgba(217,145,63,0.10), transparent 70%),
+      var(--surface-2);
+    position: relative;
+  }
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: var(--copper);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+  .price-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .price-amount {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .price-amount .per {
+    font-size: 16px;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .price-desc { color: var(--text-dim); font-size: 14px; margin-bottom: 24px; min-height: 40px; }
+  .price-features { list-style: none; margin-bottom: 28px; }
+  .price-features li {
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .price-features li::before {
+    content: '✓';
+    color: var(--copper);
+    font-weight: bold;
+  }
+  .price-features li:last-child { border-bottom: none; }
+
+  /* === FAQ === */
+  .faq-list {
+    margin-top: 40px;
+    max-width: 760px;
+  }
+  .faq-item {
+    border-top: 1px solid var(--line);
+    padding: 24px 0;
+  }
+  .faq-item:last-child { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    line-height: 1.3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .faq-q::after {
+    content: '+';
+    color: var(--copper);
+    font-size: 28px;
+    transition: transform 0.2s;
+  }
+  details[open] .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-top: 14px;
+    max-width: 620px;
+  }
+
+  /* === FINAL CTA === */
+  .final-cta {
+    text-align: center;
+    padding: 120px 24px;
+    background:
+      radial-gradient(ellipse at center, rgba(217,145,63,0.12), transparent 60%),
+      var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .final-cta h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+  .final-cta h2 em { color: var(--copper); font-style: italic; }
+  .final-cta p {
+    color: var(--text-dim);
+    font-size: 18px;
+    margin-bottom: 40px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === FOOTER === */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 60px 0 40px;
+  }
+  footer .container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  footer h5 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+  }
+  footer a {
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 0;
+    transition: color 0.15s;
+  }
+  footer a:hover { color: var(--copper); }
+  .footer-tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-top: 20px;
+    max-width: 300px;
+    line-height: 1.4;
+  }
+  .footer-bottom {
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+    padding-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 800px) {
+    .math-grid, .steps, .feature-grid, .testimonials-grid, .pricing-grid {
+      grid-template-columns: 1fr;
+    }
+    .ticker .container { grid-template-columns: 1fr 1fr; gap: 24px; }
+    footer .container { grid-template-columns: 1fr 1fr; }
+    .nav-links a:not(.btn) { display: none; }
+    .hero { padding: 60px 0 80px; }
+    section { padding: 70px 0; }
+  }
+
+  /* entrance */
+  .reveal { animation: rise 0.7s ease-out backwards; }
+  .reveal:nth-child(2) { animation-delay: 0.1s; }
+  .reveal:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="brand">Closeout</div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/app" class="btn">Start free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- === HERO === -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow reveal">FOR BARTENDERS, SERVERS, BARISTAS &amp; ANYONE WHO LIVES ON TIPS</div>
+    <h1 class="reveal">
+      The IRS doesn't care that you<br>got paid in <em>singles.</em>
+    </h1>
+    <p class="hero-sub reveal">
+      Closeout tracks your tips, sets aside your tax, and tells you what's actually yours to spend.
+      Built for people who don't know what they made until they cash out.
+    </p>
+    <div class="hero-cta-row reveal">
+      <a href="/app" class="btn btn-large">Start tracking — free →</a>
+      <a href="#how" class="btn btn-ghost btn-large">See how it works</a>
+    </div>
+    <p class="hero-disclaimer">No bank connection. No spreadsheet. 90 seconds to your first number.</p>
+  </div>
+</section>
+
+<!-- === TICKER STATS === -->
+<div class="ticker">
+  <div class="container">
+    <div class="ticker-item">
+      <div class="ticker-number">$1,400</div>
+      <div class="ticker-label">Avg. "No Tax on Tips"<br>refund in 2026</div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-number">$25K</div>
+      <div class="ticker-label">Max federal tip<br>deduction through 2028</div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-number">70+</div>
+      <div class="ticker-label">Tipped occupations<br>that qualify</div>
+    </div>
+    <div class="ticker-item">
+      <div class="ticker-number">12%</div>
+      <div class="ticker-label">FICA + state still owed<br>(track it or lose it)</div>
+    </div>
+  </div>
+</div>
+
+<!-- === THE MATH === -->
+<section>
+  <div class="container">
+    <div class="section-label">The math nobody runs for you</div>
+    <h2 class="section-title">You're owed up to $1,400 in 2026. Most tipped workers don't know it.</h2>
+    <p class="section-sub">"No Tax on Tips" passed in 2025 — but only if you track right. Federal tax on tips is deductible through 2028. FICA and state tax still apply. Closeout does both, live, every shift.</p>
+
+    <div class="math-grid">
+      <blockquote class="math-quote">
+        "Bartender at a steakhouse. I had no idea I could deduct up to $25K of my tips. My CPA found me $1,180 I didn't know I was owed."
+      </blockquote>
+      <div class="math-card">
+        <div class="math-line"><span>Saturday hours (8 × $2.13)</span><span>$17.04</span></div>
+        <div class="math-line"><span>Credit card tips</span><span>$268.00</span></div>
+        <div class="math-line"><span>Cash tips</span><span>$96.00</span></div>
+        <div class="math-line"><span>Tip-out to bussers / bar (5%)</span><span>−$18.20</span></div>
+        <div class="math-line"><span>What you put in your pocket</span><span>$362.84</span></div>
+        <div class="math-line"><span>Federal tax on tips ("No Tax on Tips")</span><span style="color: var(--green);">$0.00 ✓</span></div>
+        <div class="math-line"><span>FICA + state (~12%)</span><span>−$43.54</span></div>
+        <div class="math-line total"><span>Yours tonight</span><span style="color: var(--green);">$319.30</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === HOW IT WORKS === -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Three taps. One honest number.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">— 01</div>
+        <h3>Log your shift.</h3>
+        <p>Hours, tips, tip-out. 30 seconds. You can do it walking to your car.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">— 02</div>
+        <h3>See what's yours.</h3>
+        <p>Tax math runs live. So does your "safe to spend" number — based on a smoothed average so a slow Tuesday doesn't blow your week.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">— 03</div>
+        <h3>Stop owing the IRS.</h3>
+        <p>Your tax reserve grows shift by shift. April becomes boring instead of catastrophic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === FEATURES === -->
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-label">What's in the box</div>
+    <h2 class="section-title">Built for tip pools, double shifts &amp; cash drawers.</h2>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">⌗</div>
+        <h4>Tip-out calculator</h4>
+        <p>For pooled houses, percentage-based tip-outs, and the math you shouldn't have to do at 2am.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">§</div>
+        <h4>Multi-state tax engine</h4>
+        <p>Texas has no state income tax. California has a lot. Closeout knows which one is yours.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">∞</div>
+        <h4>Income smoothing</h4>
+        <p>Four-week rolling average tells you what you'll <em>actually</em> have, not just what tonight looked like.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⧗</div>
+        <h4>Tax reserve tracker</h4>
+        <p>Quarterly target meter. Hit it shift by shift. Stop dreading the IRS letter.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">→</div>
+        <h4>One-click tax export</h4>
+        <p>Year-end CSV, TurboTax &amp; H&amp;R Block ready. Your tax filer will love you.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚯</div>
+        <h4>POS auto-import</h4>
+        <p>Toast, Square, Clover, 7shifts. Stop typing tips at the end of every shift.<span class="soon">Coming Q3 2026</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === TESTIMONIALS === -->
+<section>
+  <div class="container">
+    <div class="section-label">From the floor</div>
+    <h2 class="section-title">Real workers. Real receipts.</h2>
+
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p class="testimonial-quote">"First app that actually understands what a tip-out is. I'm not converting it to 'business expense.' It's just tip-out."</p>
+        <div class="testimonial-who">
+          <span class="testimonial-name">Maya R.</span>
+          <span>Bartender · Austin TX</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"Got blindsided for $4,200 last April. Started Closeout in September. Owed $180 this year. I'm a believer."</p>
+        <div class="testimonial-who">
+          <span class="testimonial-name">Devon K.</span>
+          <span>Server · Chicago IL</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"The 'safe to spend' number is the only finance number I look at. It just works."</p>
+        <div class="testimonial-who">
+          <span class="testimonial-name">Joss A.</span>
+          <span>Barista · Brooklyn NY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === PRICING === -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Less than one drink at staff price.</h2>
+    <p class="section-sub">Free forever for the basics. Pro pays for itself the first time you avoid an IRS penalty.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amount">$0 <span class="per">/ forever</span></div>
+        <p class="price-desc">Everything you need to know what you actually made.</p>
+        <ul class="price-features">
+          <li>Manual shift logging</li>
+          <li>Live tax math</li>
+          <li>Tip-out calculator</li>
+          <li>Safe-to-spend number</li>
+          <li>Single-state tax engine</li>
+        </ul>
+        <a href="/app" class="btn btn-ghost btn-large" style="width:100%; text-align:center;">Start free</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-name">Pro</div>
+        <div class="price-amount">$4.99 <span class="per">/ month</span></div>
+        <p class="price-desc">Or $39/yr — pays for itself if you avoid one IRS penalty.</p>
+        <ul class="price-features">
+          <li>Everything in Free</li>
+          <li>POS auto-import (Toast, Square, Clover, 7shifts)</li>
+          <li>Multi-state tax engine</li>
+          <li>Auto tax-reserve sweeps</li>
+          <li>Year-end tax exports</li>
+          <li>Quarterly estimate reminders</li>
+        </ul>
+        <a href="/app" class="btn btn-large" style="width:100%; text-align:center;">Start 14-day Pro trial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === FAQ === -->
+<section>
+  <div class="container">
+    <div class="section-label">Things people ask</div>
+    <h2 class="section-title">Honest answers.</h2>
+
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary class="faq-q">How does the new "No Tax on Tips" law affect me?</summary>
+        <p class="faq-a">Big deal. The OBBBA, signed July 2025, lets eligible tipped workers deduct up to $25,000 in qualified tips from federal income tax through 2028. The average refund is ~$1,400. But: you have to track your tips correctly — voluntary tips count, mandatory service charges don't. You also still owe FICA (7.65%) and state taxes. Closeout tracks the right things so you can claim the maximum deduction and not miss out.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Do I have to connect my bank account?</summary>
+        <p class="faq-a">No. Never required. Manual entry works forever. Bank connection is optional for the auto-savings feature in Pro — and even then, we use Plaid (the same security infrastructure your bank uses).</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">What about cash tips I don't report?</summary>
+        <p class="faq-a">Under "No Tax on Tips," cash tips that <em>are</em> reported now save you federal income tax — so there's a real financial upside to reporting accurately (the average claim is ~$1,400). Closeout doesn't report to anyone; we're a private tool. We just help you see the math both ways so you can make the call. What goes on your tax return is between you and your tax preparer.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Is this tax advice?</summary>
+        <p class="faq-a">No — Closeout is an estimator, not a tax preparer. We help you save the right amount and export clean data. The actual filing is for you and your CPA / TurboTax / H&amp;R Block. Same model as Mint or Hurdlr.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Which POS systems work with Closeout?</summary>
+        <p class="faq-a">At launch: manual entry only — works for any job. In development for Q3 2026: Toast, Square, Clover, and 7shifts integrations. Email us your POS and we'll prioritize.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Why $4.99 when other tax apps cost $20+?</summary>
+        <p class="faq-a">Because tipped workers are paid hourly + tips, not in salary. $4.99 is one drink at staff price. We don't think you should pay $200/year to know what you make.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Is there an iOS or Android app?</summary>
+        <p class="faq-a">Web app at launch — works on every phone, no download. Native iOS app is in development based on early-user demand. Get in now to vote on what we build next.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- === FINAL CTA === -->
+<section class="final-cta">
+  <h2>Don't leave your <em>$1,400 refund</em> on the table.</h2>
+  <p>"No Tax on Tips" only helps if you track right. Free to start. No bank connection. Your first number is 90 seconds away.</p>
+  <a href="/app" class="btn btn-large">Start tracking — it's free →</a>
+</section>
+
+<!-- === FOOTER === -->
+<footer>
+  <div class="container">
+    <div>
+      <div class="brand">Closeout</div>
+      <p class="footer-tagline">Built for people who pour, plate &amp; pick up the tab.</p>
+    </div>
+    <div>
+      <h5>Product</h5>
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Roadmap</a>
+    </div>
+    <div>
+      <h5>Resources</h5>
+      <a href="#">Tax guide for bartenders</a>
+      <a href="#">Tip-out calculator</a>
+      <a href="#">2026 average tip report</a>
+      <a href="#">Blog</a>
+    </div>
+    <div>
+      <h5>Company</h5>
+      <a href="#">About</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">© 2026 CLOSEOUT · NOT TAX ADVICE · YOUR DATA IS YOURS</div>
+  </div>
+</footer>
+
+</body>
+</html>
